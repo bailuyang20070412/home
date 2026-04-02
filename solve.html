@@ -1,0 +1,316 @@
+﻿—<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Quadratic Equation Solver | solve.html</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #f5f7fc 0%, #e9eef4 100%);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+        }
+        .card {
+            max-width: 880px;
+            width: 100%;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(0px);
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2), 0 1px 3px rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .header {
+            background: #1e2a3e;
+            color: white;
+            padding: 1.6rem 2rem;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.9rem;
+            letter-spacing: -0.3px;
+        }
+        .header p {
+            margin: 0.5rem 0 0;
+            opacity: 0.85;
+            font-size: 0.95rem;
+        }
+        .content {
+            padding: 2rem 2rem 1.5rem;
+        }
+        .equation-badge {
+            background: #eef2ff;
+            padding: 0.7rem 1rem;
+            border-radius: 1.2rem;
+            font-family: monospace;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 1.8rem;
+            color: #0f172a;
+            font-weight: 500;
+            border: 1px solid #cbd5e1;
+        }
+        .btn-solve {
+            background: #0f3b2c;
+            color: white;
+            border: none;
+            padding: 0.9rem 1.8rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 60px;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 1.8rem;
+            letter-spacing: 0.3px;
+        }
+        .btn-solve:hover {
+            background: #1e5a44;
+            transform: scale(0.98);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .problems-section {
+            background: #fef9e3;
+            border-left: 6px solid #e6b12e;
+            padding: 1rem 1.4rem;
+            border-radius: 1rem;
+            margin: 1.8rem 0 1rem;
+        }
+        .problems-section h3 {
+            margin: 0 0 0.6rem 0;
+            color: #9b6f0b;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .problems-section ul {
+            margin: 0;
+            padding-left: 1.4rem;
+        }
+        .problems-section li {
+            margin: 0.45rem 0;
+            line-height: 1.4;
+            color: #2c2b26;
+        }
+        .info-console {
+            background: #1e293b;
+            color: #cbd5e6;
+            font-family: 'Courier New', monospace;
+            padding: 0.6rem 1rem;
+            border-radius: 14px;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        hr {
+            margin: 1rem 0;
+            border-color: #e2e8f0;
+        }
+        footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #5b6e8c;
+            padding: 1rem 1rem 1.5rem;
+            border-top: 1px solid #e2edf2;
+            background: #fafcff;
+        }
+        .note {
+            background: #e6f4ea;
+            border-radius: 12px;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            color: #2c5e2e;
+            margin: 1rem 0 0;
+        }
+        @media (max-width: 550px) {
+            .content { padding: 1.5rem; }
+            .header h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="header">
+        <h1>✧  Quadratic Solver  ✧</h1>
+        <p>ax² + bx + c = 0 &nbsp;|&nbsp; <strong>a > 0 &nbsp; &Delta; ≥ 0</strong> (assumptions)</p>
+    </div>
+    <div class="content">
+        <div class="equation-badge">
+            🧮 &nbsp; x = [ -b ± √(b² - 4ac) ] / 2a
+        </div>
+        
+        <button class="btn-solve" id="solveBtn">⚡ SOLVE EQUATION (prompt input) ⚡</button>
+        
+        <div class="info-console">
+            📟 Open Console (F12) → see detailed logs via <code style="background:#00000055;padding:2px 6px;border-radius:8px;">console.log()</code>
+        </div>
+        
+        <!-- Question (7) : problems encountered during testing -->
+        <div class="problems-section">
+            <h3>⚠️  Question 7 – Problems encountered during testing  ⚠️</h3>
+            <ul>
+                <li><strong>🔹 Non‑numeric / empty inputs:</strong> <code>prompt()</code> returns string; <code>parseFloat()</code> gives <code>NaN</code> if user cancels, leaves blank, or types letters. This leads to invalid calculations unless validated.</li>
+                <li><strong>🔹 Violation of assumptions (a ≤ 0 or delta &lt; 0):</strong> Even though lab assumes <code>a>0</code> and <code>Δ ≥ 0</code>, random testing with negative <em>a</em> produces swapped parabola orientation or division by zero if a=0. Negative Δ gives <code>NaN</code> from <code>Math.sqrt()</code> → no real roots.</li>
+                <li><strong>🔹 Floating point precision:</strong> For certain values (e.g., a=1, b=1e15, c=1) results may show tiny rounding errors due to JavaScript's IEEE754 arithmetic (e.g., x1+x2 slightly off -b/a).</li>
+                <li><strong>🔹 parseFloat partial parsing:</strong> Input like <code>"5.6abc"</code> returns <code>5.6</code> silently, user might expect error but program continues — hidden inconsistency.</li>
+                <li><strong>🔹 User experience & repetitive testing:</strong> The built-in prompts block the UI. However, the <strong>"Solve" button</strong> allows multiple tests without page refresh, but each time three prompts appear — clicking outside or cancel leads to <code>null</code> handling.</li>
+                <li><strong>🔹 Large coefficients risk:</strong> Values extremely big cause <code>delta</code> overflow? Not typical, but <code>b*b</code> could exceed <code>Number.MAX_SAFE_INTEGER</code>  losing precision.</li>
+                <li><strong>🔹 Delta = 0 yields double root:</strong> Works fine, but alert shows same x1/x2 (expected). No logical issue but user might be confused about identical roots.</li>
+            </ul>
+            <div class="note">
+                💡 <strong>Note from testing:</strong> Our implementation includes validation (checks for NaN, a≤0, Δ&lt;0) to avoid silent errors and illustrate real-world pitfalls. Without validation, problems would be more severe.
+            </div>
+        </div>
+        <footer>
+            📐 Lab 51 – Quadratic solver · Follows spec: prompts → parseFloat → Δ → x1,x2 → alert + console.log
+        </footer>
+    </div>
+</div>
+
+<script>
+    // Quadratic Equation Solver - Full implementation
+    // Meets requirements: 3x prompt, parseFloat, delta, x1/x2, alert + console.log
+    // Robust with validation but respects assumption warnings.
+    
+    // Helper: safe numeric conversion + validation message
+    function getValidatedCoefficient(promptMessage, coeffName) {
+        let userInput = prompt(promptMessage);
+        // user cancelled (null)
+        if (userInput === null) {
+            alert(`❌ Input cancelled. Please refresh or click Solve again. (${coeffName} missing)`);
+            return null;
+        }
+        // trim whitespace
+        let trimmed = userInput.trim();
+        if (trimmed === "") {
+            alert(`⚠️ Empty value for ${coeffName}. Please enter a valid number.`);
+            return null;
+        }
+        let num = parseFloat(trimmed);
+        if (isNaN(num)) {
+            alert(`❌ Invalid number for ${coeffName}: "${userInput}" is not numeric.`);
+            return null;
+        }
+        return num;
+    }
+    
+    // main solving routine (called on load & button click)
+    function solveQuadratic() {
+        console.log("--- NEW QUADRATIC SOLVE SESSION ---");
+        
+        // 1. Get coefficients with prompt
+        let a = getValidatedCoefficient("🔢 Enter coefficient a (a > 0, e.g., 2):", "a");
+        if (a === null) return;
+        let b = getValidatedCoefficient("🔢 Enter coefficient b (e.g., -5):", "b");
+        if (b === null) return;
+        let c = getValidatedCoefficient("🔢 Enter coefficient c (e.g., 3):", "c");
+        if (c === null) return;
+        
+        // Log raw inputs
+        console.log(`📥 User inputs → a = ${a}, b = ${b}, c = ${c}`);
+        
+        // 2. Validate assumption a > 0 (required by problem assumption, but we warn if violated)
+        if (a <= 0) {
+            const msg = `⚠️ Assumption violation: a must be > 0 (received a = ${a}). Quadratic may degenerate or not satisfy spec. Still computing (may produce Infinity/NaN).`;
+            alert(msg);
+            console.warn(msg);
+            // but we proceed because some users may test edge cases -> demonstrates problems!
+            // However we still compute but double-check delta & sqrt.
+        }
+        
+        // 3. Compute discriminant Δ = b*b - 4*a*c
+        let delta = (b * b) - (4 * a * c);
+        console.log(`📐 Δ (discriminant) = ${delta}`);
+        
+        // 4. Check delta >= 0 (spec assumption, but we handle negative for robustness)
+        if (delta < 0) {
+            const errMsg = `🚫 Discriminant is NEGATIVE (Δ = ${delta}). Real roots do NOT exist. Quadratic formula gives complex roots, but lab assumes Δ ≥ 0. Returning NaN results.`;
+            alert(errMsg);
+            console.error(errMsg);
+            // Still compute, but sqrt(negative) = NaN, so x1,x2 will be NaN -> alert with NaN
+            // We'll compute anyway to follow formula, but show that real solution fails.
+            let x1 = (-b + Math.sqrt(delta)) / (2 * a);
+            let x2 = (-b - Math.sqrt(delta)) / (2 * a);
+            alert(`⚠️ Because Δ < 0, real roots don't exist.\nComputed (complex/NaN):\nx1 = ${x1}\nx2 = ${x2}`);
+            console.log(`⚠️ Delta negative: x1 = ${x1}, x2 = ${x2} (complex/NaN)`);
+            return;
+        }
+        
+        // 5. Compute roots using quadratic formula (spec step 4)
+        let sqrtDelta = Math.sqrt(delta);
+        let x1 = (-b + sqrtDelta) / (2 * a);
+        let x2 = (-b - sqrtDelta) / (2 * a);
+        
+        // 6. Format roots nicely (avoid scientific notation for small numbers? keep precision)
+        // Show up to 10 decimal places for readability but keep full number in console.
+        let x1Formatted = Number.isFinite(x1) ? (Math.abs(x1) < 1e-12 ? 0 : x1) : x1;
+        let x2Formatted = Number.isFinite(x2) ? (Math.abs(x2) < 1e-12 ? 0 : x2) : x2;
+        
+        // Build alert message
+        let alertMessage = `✅ Equation: ${a}x² + ${b}x + ${c} = 0\n` +
+                           `Δ = ${delta}  (≥0) ✓\n` +
+                           `──────────────────\n` +
+                           `📌 x1 = ${x1Formatted}\n` +
+                           `📌 x2 = ${x2Formatted}`;
+        
+        // 5. alert user x1 and x2
+        alert(alertMessage);
+        
+        // 6. same results using console.log with extra details
+        console.log("🎯 QUADRATIC SOLUTION (via formula):");
+        console.log(`   ➤ Equation: ${a}x^2 + ${b}x + ${c} = 0`);
+        console.log(`   ➤ Discriminant (Δ) = ${delta}`);
+        console.log(`   ➤ sqrt(Δ) = ${sqrtDelta}`);
+        console.log(`   ➤ x1 = ${x1}   |   x2 = ${x2}`);
+        // Also display formatted if needed
+        console.log(`   ➤ [alert formatted] x1 ≈ ${x1Formatted}, x2 ≈ ${x2Formatted}`);
+        
+        // Edge note for double root
+        if (Math.abs(x1 - x2) < 1e-12 && delta === 0) {
+            console.log("   ✨ Double root (Δ = 0) — both roots are identical.");
+        }
+        
+        // Additional floating point warnings (just informative)
+        if (Math.abs(x1 + x2 + b/a) > 1e-10 && Number.isFinite(x1)) {
+            console.log("   ℹ️ Note: tiny floating point rounding may affect sum of roots.");
+        }
+        
+        console.log("--- END SESSION ---\n");
+    }
+    
+    // Attach event to button (multiple tests without reloading the page)
+    const solveButton = document.getElementById('solveBtn');
+    if (solveButton) {
+        solveButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            solveQuadratic();
+        });
+    }
+    
+    // According to original lab: "call prompt function for three times to get coefficient a, b and c from user"
+    // We also call solver once when page loads to match immediate test (just like opening html triggers prompts)
+    // This ensures first interaction happens automatically, satisfying requirement that script does it.
+    // Also user can press button again for multiple random tests.
+    window.addEventListener('DOMContentLoaded', () => {
+        // small delay for better UI consistency? Not needed, but ensures DOM ready.
+        // we directly call solveQuadratic to trigger prompts as required by the spec step 1.
+        // This demonstrates exactly the behaviour: upon loading solve.html, prompts appear.
+        console.log("🌱 solve.html loaded — starting first solver (prompt sequence) as per spec.");
+        solveQuadratic();
+    });
+</script>
+</body>
+</html>
